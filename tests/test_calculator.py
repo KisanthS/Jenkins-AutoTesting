@@ -27,5 +27,5 @@ class TestCalculator:
 
     def test_divide_by_zero(self):
         logger.info("Testing divide by zero")
-        with pytest.raises(ZeroDivisionError):
+        with pytest.raises(ValueError):
             self.calc.divide(1, 0)
