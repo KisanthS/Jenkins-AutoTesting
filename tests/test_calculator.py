@@ -10,22 +10,31 @@ class TestCalculator:
         self.calc = Calculator()
 
     def test_add(self):
-        logger.info("Testing addition")
-        assert self.calc.add(1, 2) == 3
+        a, b = 1, 2
+        result = self.calc.add(a, b)
+        logger.info(f"Testing addition: {a} + {b} = {result}")
+        assert result == 3
 
     def test_subtract(self):
-        logger.info("Testing subtraction")
-        assert self.calc.subtract(5, 2) == 3
+        a, b = 5, 2
+        result = self.calc.subtract(a, b)
+        logger.info(f"Testing subtraction: {a} - {b} = {result}")
+        assert result == 3
 
     def test_multiply(self):
-        logger.info("Testing multiplication")
-        assert self.calc.multiply(2, 3) == 6
+        a, b = 2, 3
+        result = self.calc.multiply(a, b)
+        logger.info(f"Testing multiplication: {a} * {b} = {result}")
+        assert result == 6
 
     def test_divide(self):
-        logger.info("Testing division")
-        assert self.calc.divide(10, 2) == 5
+        a, b = 10, 2
+        result = self.calc.divide(a, b)
+        logger.info(f"Testing division: {a} / {b} = {result}")
+        assert result == 5
 
     def test_divide_by_zero(self):
-        logger.info("Testing divide by zero")
+        a, b = 1, 0
+        logger.info(f"Testing divide by zero: {a} / {b}")
         with pytest.raises(ValueError):
-            self.calc.divide(1, 0)
+            self.calc.divide(a, b)
