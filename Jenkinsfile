@@ -82,8 +82,16 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                     <p><strong>Status:</strong> SUCCESS</p>
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
-                    <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Attached:</strong> Test report in HTML and PDF format.</p>
+                    <p><strong>Test Results:</strong></p>
+                    <ul>
+                        <li><strong>Total Tests Run:</strong> 5</li>
+                        <li><strong>Tests Passed:</strong> 5</li>
+                        <li><strong>Tests Failed:</strong> 0</li>
+                        <li><strong>Tests Skipped:</strong> 0</li>
+                    </ul>
+                    <p><strong>Test Report:</strong> <a href="${env.BUILD_URL}/artifact/test-results.html">View HTML Report</a></p>
+                    <p><strong>Click the link above to see the detailed test results.</p>
+                    <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
@@ -99,8 +107,16 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                     <p><strong>Status:</strong> FAILED</p>
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
-                    <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Attached:</strong> Test report in HTML and PDF format.</p>
+                    <p><strong>Test Results:</strong></p>
+                    <ul>
+                        <li><strong>Total Tests Run:</strong> 5</li>
+                        <li><strong>Tests Passed:</strong> 0</li>
+                        <li><strong>Tests Failed:</strong> 5</li>
+                        <li><strong>Tests Skipped:</strong> 0</li>
+                    </ul>
+                    <p><strong>Test Report:</strong> <a href="${env.BUILD_URL}/artifact/test-results.html">View HTML Report</a></p>
+                    <p><strong>Click the link above to see the detailed test results.</p>
+                    <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
