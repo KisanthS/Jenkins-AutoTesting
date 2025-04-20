@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                 . ${VENV_PATH}/bin/activate
-                pytest --junitxml=test-results.xml --html=test-results.html --self-contained-html
+                pytest --maxfail=5 --durations=10 --junitxml=test-results.xml --html=test-results.html --self-contained-html
                 '''
             }
             post {
