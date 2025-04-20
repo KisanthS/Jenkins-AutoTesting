@@ -83,11 +83,11 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
                     <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Test Report:</strong> PDF attached.</p>
+                    <p><strong>Attached:</strong> Test report in HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.pdf'
+                attachmentsPattern: 'test-results.html,test-results.pdf'
             )
         }
 
@@ -100,13 +100,12 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
                     <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Test Report:</strong> PDF attached.</p>
+                    <p><strong>Attached:</strong> Test report in HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.pdf'
+                attachmentsPattern: 'test-results.html,test-results.pdf'
             )
         }
     }
 }
-
