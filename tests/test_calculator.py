@@ -21,7 +21,8 @@ class TestCalculator:
         result = self.calc.add(a, b)
         logger.info(f"Addition: {a} + {b} = {result}")  # Log the result clearly
         end_time = time.time()  # End timer
-        logger.info(f"\nAddition took {end_time - start_time:.4f} seconds\n")  # Added newline for spacing
+        logger.info(f"\n")  # Add newline after result log
+        logger.info(f"Addition took {end_time - start_time:.4f} seconds\n")  # Log time taken
         self.log_and_assert(f"{a} + {b}", result, 3, "Addition")
 
     def test_subtract(self):
@@ -31,7 +32,8 @@ class TestCalculator:
         result = self.calc.subtract(a, b)
         logger.info(f"Subtraction: {a} - {b} = {result}")  # Log the result clearly
         end_time = time.time()  # End timer
-        logger.info(f"\nSubtraction took {end_time - start_time:.4f} seconds\n")  # Added newline for spacing
+        logger.info(f"\n")  # Add newline after result log
+        logger.info(f"Subtraction took {end_time - start_time:.4f} seconds\n")  # Log time taken
         self.log_and_assert(f"{a} - {b}", result, 3, "Subtraction")
 
     def test_multiply(self):
@@ -41,7 +43,8 @@ class TestCalculator:
         result = self.calc.multiply(a, b)
         logger.info(f"Multiplication: {a} * {b} = {result}")  # Log the result clearly
         end_time = time.time()  # End timer
-        logger.info(f"\nMultiplication took {end_time - start_time:.4f} seconds\n")  # Added newline for spacing
+        logger.info(f"\n")  # Add newline after result log
+        logger.info(f"Multiplication took {end_time - start_time:.4f} seconds\n")  # Log time taken
         self.log_and_assert(f"{a} * {b}", result, 6, "Multiplication")
 
     def test_divide(self):
@@ -51,7 +54,8 @@ class TestCalculator:
         result = self.calc.divide(a, b)
         logger.info(f"Division: {a} / {b} = {result}")  # Log the result clearly
         end_time = time.time()  # End timer
-        logger.info(f"\nDivision took {end_time - start_time:.4f} seconds\n")  # Added newline for spacing
+        logger.info(f"\n")  # Add newline after result log
+        logger.info(f"Division took {end_time - start_time:.4f} seconds\n")  # Log time taken
         self.log_and_assert(f"{a} / {b}", result, 5, "Division")
 
     def test_divide_by_zero(self):
@@ -62,7 +66,8 @@ class TestCalculator:
             self.calc.divide(a, b)
         except ValueError as e:
             end_time = time.time()  # End timer
-            logger.info(f"\nDivide by zero test took {end_time - start_time:.4f} seconds\n")  # Added newline for spacing
+            logger.info(f"\n")  # Add newline after result log
+            logger.info(f"Divide by zero test took {end_time - start_time:.4f} seconds\n")  # Log time taken
             logger.info(f"Expected error: {str(e)}")
             # Assert that the exception was indeed raised
             assert str(e) == "Cannot divide by zero"
