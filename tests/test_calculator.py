@@ -10,8 +10,8 @@ class TestCalculator:
     def setup_method(self):
         self.calc = Calculator()
 
-    def log_and_assert(self, operation, result, expected, test_name, duration):
-        logger.info(f"{test_name}: {operation} = {result} (Duration: {duration:.4f} seconds)")
+    def log_and_assert(self, operation, result, expected, test_name):
+        logger.info(f"{test_name}: {operation} = {result}")
         assert result == expected, f"Expected {test_name} to be {expected}, but got {result}"
 
     def test_add(self):
@@ -20,8 +20,8 @@ class TestCalculator:
         logger.info(f"Testing addition: {a} + {b}")
         result = self.calc.add(a, b)
         end_time = time.time()  # End timer
-        duration = end_time - start_time
-        self.log_and_assert(f"{a} + {b}", result, 3, "Addition", duration)
+        logger.info(f"Addition took {end_time - start_time:.4f} seconds")
+        self.log_and_assert(f"{a} + {b}", result, 3, "Addition")
 
     def test_subtract(self):
         a, b = 5, 2
@@ -29,8 +29,8 @@ class TestCalculator:
         logger.info(f"Testing subtraction: {a} - {b}")
         result = self.calc.subtract(a, b)
         end_time = time.time()  # End timer
-        duration = end_time - start_time
-        self.log_and_assert(f"{a} - {b}", result, 3, "Subtraction", duration)
+        logger.info(f"Subtraction took {end_time - start_time:.4f} seconds")
+        self.log_and_assert(f"{a} - {b}", result, 3, "Subtraction")
 
     def test_multiply(self):
         a, b = 2, 3
@@ -38,8 +38,8 @@ class TestCalculator:
         logger.info(f"Testing multiplication: {a} * {b}")
         result = self.calc.multiply(a, b)
         end_time = time.time()  # End timer
-        duration = end_time - start_time
-        self.log_and_assert(f"{a} * {b}", result, 6, "Multiplication", duration)
+        logger.info(f"Multiplication took {end_time - start_time:.4f} seconds")
+        self.log_and_assert(f"{a} * {b}", result, 6, "Multiplication")
 
     def test_divide(self):
         a, b = 10, 2
@@ -47,8 +47,8 @@ class TestCalculator:
         logger.info(f"Testing division: {a} / {b}")
         result = self.calc.divide(a, b)
         end_time = time.time()  # End timer
-        duration = end_time - start_time
-        self.log_and_assert(f"{a} / {b}", result, 5, "Division", duration)
+        logger.info(f"Division took {end_time - start_time:.4f} seconds")
+        self.log_and_assert(f"{a} / {b}", result, 5, "Division")
 
     def test_divide_by_zero(self):
         a, b = 1, 0
@@ -58,8 +58,7 @@ class TestCalculator:
             self.calc.divide(a, b)
         except ValueError as e:
             end_time = time.time()  # End timer
-            duration = end_time - start_time
-            logger.info(f"Divide by zero test took {duration:.4f} seconds")
+            logger.info(f"Divide by zero test took {end_time - start_time:.4f} seconds")
             logger.info(f"Expected error: {str(e)}")
             # Assert that the exception was indeed raised
             assert str(e) == "Cannot divide by zero"
