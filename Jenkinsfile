@@ -23,6 +23,7 @@ pipeline {
                 . ${VENV_PATH}/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                pip install pdfkit
                 '''
             }
         }
@@ -58,6 +59,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Convert HTML to PDF') {
+            steps {
+                sh '''
+                . ${VENV_PATH}/bin/activate
+                python3 -c "
+import pdfkit
+pdfkit.from_file('test-results.html', 'test-results.pdf')
+"
+                '''
+            }
+        }
     }
 
     post {
@@ -70,11 +83,11 @@ pipeline {
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
                     <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Test Report:</strong> Attached</p>
+                    <p><strong>Test Report:</strong> PDF attached.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.html'
+                attachmentsPattern: 'test-results.pdf'
             )
         }
 
@@ -87,11 +100,11 @@ pipeline {
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build Number:</strong> ${env.BUILD_NUMBER}</p>
                     <p><strong>URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    <p><strong>Test Report:</strong> Attached</p>
+                    <p><strong>Test Report:</strong> PDF attached.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.html'
+                attachmentsPattern: 'test-results.pdf'
             )
         }
     }
