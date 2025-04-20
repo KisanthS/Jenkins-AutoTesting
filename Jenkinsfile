@@ -77,7 +77,7 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
         success {
             echo 'Python tests completed successfully!'
             emailext (
-                subject: "✅ SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                subject: "🟢 SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """
                     <p><strong>Status:</strong> SUCCESS</p>
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
@@ -89,8 +89,6 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                         <li><strong>Tests Failed:</strong> 0</li>
                         <li><strong>Tests Skipped:</strong> 0</li>
                     </ul>
-                    <p><strong>Test Report:</strong> <a href="${env.BUILD_URL}/artifact/test-results.html">View HTML Report</a></p>
-                    <p><strong>Click the link above to see the detailed test results.</p>
                     <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
@@ -102,7 +100,7 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
         failure {
             echo 'Python tests failed!'
             emailext (
-                subject: "❌ FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                subject: "🔴 FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """
                     <p><strong>Status:</strong> FAILED</p>
                     <p><strong>Job:</strong> ${env.JOB_NAME}</p>
@@ -114,8 +112,6 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                         <li><strong>Tests Failed:</strong> 5</li>
                         <li><strong>Tests Skipped:</strong> 0</li>
                     </ul>
-                    <p><strong>Test Report:</strong> <a href="${env.BUILD_URL}/artifact/test-results.html">View HTML Report</a></p>
-                    <p><strong>Click the link above to see the detailed test results.</p>
                     <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
