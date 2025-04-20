@@ -10,31 +10,30 @@ class TestCalculator:
         self.calc = Calculator()
 
     def test_add(self):
-        a, b = 1, 2
-        result = self.calc.add(a, b)
-        logger.info(f"Testing addition: {a} + {b} = {result}")
-        assert result == 3
+        logger.info("Testing addition")
+        result = self.calc.add(1, 2)
+        logger.info(f"Addition Result: {result}")
+        assert result == 3, f"Expected 3 but got {result}"
 
     def test_subtract(self):
-        a, b = 5, 2
-        result = self.calc.subtract(a, b)
-        logger.info(f"Testing subtraction: {a} - {b} = {result}")
-        assert result == 3
+        logger.info("Testing subtraction")
+        result = self.calc.subtract(5, 2)
+        logger.info(f"Subtraction Result: {result}")
+        assert result == 3, f"Expected 3 but got {result}"
 
     def test_multiply(self):
-        a, b = 2, 3
-        result = self.calc.multiply(a, b)
-        logger.info(f"Testing multiplication: {a} * {b} = {result}")
-        assert result == 6
+        logger.info("Testing multiplication")
+        result = self.calc.multiply(2, 3)
+        logger.info(f"Multiplication Result: {result}")
+        assert result == 6, f"Expected 6 but got {result}"
 
     def test_divide(self):
-        a, b = 10, 2
-        result = self.calc.divide(a, b)
-        logger.info(f"Testing division: {a} / {b} = {result}")
-        assert result == 5
+        logger.info("Testing division")
+        result = self.calc.divide(10, 2)
+        logger.info(f"Division Result: {result}")
+        assert result == 5, f"Expected 5 but got {result}"
 
     def test_divide_by_zero(self):
-        a, b = 1, 0
-        logger.info(f"Testing divide by zero: {a} / {b}")
+        logger.info("Testing divide by zero")
         with pytest.raises(ValueError):
-            self.calc.divide(a, b)
+            self.calc.divide(1, 0)
