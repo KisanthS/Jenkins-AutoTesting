@@ -71,16 +71,6 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                 '''
             }
         }
-
-        stage('Capture Console Output') {
-            steps {
-                // Save the current console log to a file
-                script {
-                    def log = currentBuild.rawBuild.getLog(10000).join('\n')
-                    writeFile file: 'console_output.txt', text: log
-                }
-            }
-        }
     }
 
     post {
@@ -99,11 +89,11 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                         <li><strong>Tests Failed:</strong> 0</li>
                         <li><strong>Tests Skipped:</strong> 0</li>
                     </ul>
-                    <p>Test reports and console output are attached.</p>
+                    <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.html,test-results.pdf,console_output.txt'
+                attachmentsPattern: 'test-results.html,test-results.pdf'
             )
         }
 
@@ -122,11 +112,11 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
                         <li><strong>Tests Failed:</strong> 5</li>
                         <li><strong>Tests Skipped:</strong> 0</li>
                     </ul>
-                    <p>Test reports and console output are attached.</p>
+                    <p>Test reports are attached in both HTML and PDF format.</p>
                 """,
                 mimeType: 'text/html',
                 to: 'skisanth1114@gmail.com',
-                attachmentsPattern: 'test-results.html,test-results.pdf,console_output.txt'
+                attachmentsPattern: 'test-results.html,test-results.pdf'
             )
         }
     }
