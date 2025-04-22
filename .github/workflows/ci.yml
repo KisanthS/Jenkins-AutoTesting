@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.8
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.8'
 
@@ -42,13 +42,10 @@ jobs:
       - name: Convert HTML to PDF
         run: |
           source venv/bin/activate
-          python3 -c "
-import pdfkit
-pdfkit.from_file('test-results.html', 'test-results.pdf')
-"
+          python3 -c "import pdfkit; pdfkit.from_file('test-results.html', 'test-results.pdf')"
 
-      - name: Upload test reports
-        uses: actions/upload-artifact@v2
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v3
         with:
           name: test-reports
           path: |
@@ -56,14 +53,12 @@ pdfkit.from_file('test-results.html', 'test-results.pdf')
             test-results.html
             test-results.pdf
 
-      - name: Notify on Success
+      - name: Log Success Message
         if: success()
         run: |
-          echo "✅ Tests passed for ${{ github.repository }}!"
-          echo "Sending success email to skisanth1114@gmail.com (this is a placeholder)."
+          echo "✅ Tests passed! Email would be sent to skisanth1114@gmail.com."
 
-      - name: Notify on Failure
+      - name: Log Failure Message
         if: failure()
         run: |
-          echo "❌ Tests failed for ${{ github.repository }}!"
-          echo "Sending failure email to skisanth1114@gmail.com (this is a placeholder)."
+          echo "❌ Tests failed! Email would be sent to skisanth1114@gmail.com."
