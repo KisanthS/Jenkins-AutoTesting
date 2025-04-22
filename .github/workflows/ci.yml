@@ -1,0 +1,59 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pdfkit
+
+      - name: Run Tests with pytest
+        run: |
+          source venv/bin/activate
+          pytest --junitxml=test-results.xml --html=test-results.html --self-contained-html
+          
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: |
+            test-results.xml
+            test-results.html
+
+      - name: Convert HTML to PDF
+        run: |
+          source venv/bin/activate
+          python -c "
+import pdfkit
+pdfkit.from_file('test-results.html', 'test-results.pdf')
+"
+
+      - name: Upload PDF Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf-reports
+          path: test-results.pdf
+
+      - name: Send success notification
+        run: echo "Tests ran successfully!"
