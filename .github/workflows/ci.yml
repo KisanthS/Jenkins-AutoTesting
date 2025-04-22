@@ -13,17 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up Python
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
 
-      # Install dependencies
       - name: Install dependencies
         run: |
           python -m venv venv
@@ -32,20 +29,17 @@ jobs:
           pip install -r requirements.txt
           pip install pdfkit
 
-      # Code quality check using flake8
-      - name: Run Code Quality Check
+      - name: Run flake8 Code Quality Check
         run: |
           source venv/bin/activate
           flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
 
-      # Run the tests
-      - name: Run Tests
+      - name: Run Tests and Generate Reports
         run: |
           source venv/bin/activate
           pytest --junitxml=test-results.xml --html=test-results.html --self-contained-html
 
-      # Convert HTML test report to PDF
-      - name: Convert HTML report to PDF
+      - name: Convert HTML to PDF
         run: |
           source venv/bin/activate
           python3 -c "
@@ -53,35 +47,23 @@ import pdfkit
 pdfkit.from_file('test-results.html', 'test-results.pdf')
 "
 
-      # Upload the test results
-      - name: Upload test results (HTML and PDF)
+      - name: Upload test reports
         uses: actions/upload-artifact@v2
         with:
-          name: test-results
+          name: test-reports
           path: |
             test-results.xml
             test-results.html
             test-results.pdf
 
-    # Send success email
-    post:
-      success:
+      - name: Notify on Success
+        if: success()
         run: |
-          echo 'Python tests completed successfully!'
-          curl --url 'smtp://smtp.gmail.com:587' --ssl-reqd \
-            --mail-from 'your-email@gmail.com' \
-            --mail-rcpt 'recipient-email@example.com' \
-            --user 'your-email@gmail.com:your-app-password' \
-            -T <(echo -e "Subject: 🟢 SUCCESS: Job '${{ github.job }} [${{ github.run_number }}]'\n\nTest results attached.\n\nTest reports are attached in HTML and PDF format.")
-            --attach-file='test-results.html' --attach-file='test-results.pdf'
+          echo "✅ Tests passed for ${{ github.repository }}!"
+          echo "Sending success email to skisanth1114@gmail.com (this is a placeholder)."
 
-      failure:
+      - name: Notify on Failure
+        if: failure()
         run: |
-          echo 'Python tests failed!'
-          curl --url 'smtp://smtp.gmail.com:587' --ssl-reqd \
-            --mail-from 'your-email@gmail.com' \
-            --mail-rcpt 'recipient-email@example.com' \
-            --user 'your-email@gmail.com:your-app-password' \
-            -T <(echo -e "Subject: 🔴 FAILED: Job '${{ github.job }} [${{ github.run_number }}]'\n\nTest results attached.\n\nTest reports are attached in HTML and PDF format.")
-            --attach-file='test-results.html' --attach-file='test-results.pdf'
-
+          echo "❌ Tests failed for ${{ github.repository }}!"
+          echo "Sending failure email to skisanth1114@gmail.com (this is a placeholder)."
