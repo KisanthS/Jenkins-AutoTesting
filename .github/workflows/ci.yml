@@ -1,4 +1,4 @@
-name: Jenkins-AutoTEsting
+name: Python CI Pipeline
 
 on:
   push:
@@ -19,18 +19,13 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install wkhtmltopdf
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wkhtmltopdf
-
     - name: Install dependencies
       run: |
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pdfkit
+        pip install pdfkit yagmail
 
     - name: Run Flake8
       run: |
@@ -48,10 +43,33 @@ jobs:
         python3 -c "import pdfkit; pdfkit.from_file('test-results.html', 'test-results.pdf')"
 
     - name: Upload Test Reports
-      uses: actions/upload-artifact@v4
+      if: always()
+      uses: actions/upload-artifact@v2
       with:
         name: test-reports
         path: |
           test-results.xml
           test-results.html
           test-results.pdf
+
+    - name: Send email with reports
+      if: always()
+      env:
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      run: |
+        source venv/bin/activate || true
+        python3 -c "
+import os
+import yagmail
+attachments = []
+for f in ['test-results.html', 'test-results.pdf']:
+    if os.path.exists(f):
+        attachments.append(f)
+yag = yagmail.SMTP(user='skisanth1114@gmail.com', password=os.environ['EMAIL_PASSWORD'])
+yag.send(
+    to='skisanth1114@gmail.com',
+    subject='🔔 GitHub Actions CI Pipeline Notification',
+    contents='Build finished. Reports (if available) are attached.',
+    attachments=attachments
+)
+"
