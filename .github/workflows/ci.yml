@@ -56,11 +56,11 @@ jobs:
           test-results.html
           test-results.pdf
 
-    # Step to Send Email Notification
+    # Step to Send Email Notification using softprops/send-mail
     - name: Send Test Results Email
-      uses: matthewfeickert/send-mail-action@v1.0.1
+      uses: softprops/send-mail@v3
       with:
-        to: 'recipient@example.com'  # Replace with actual recipient email
+        to: 'skisanth1114@gmail.com'  # Replace with actual recipient email
         subject: 'Python CI Test Results from GitHub Actions'
         body: |
           <p><strong>Status:</strong> SUCCESS or FAILURE based on the result</p>
