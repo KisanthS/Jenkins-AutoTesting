@@ -1,4 +1,4 @@
-name: Jenkins-AutoTEsting
+name: Jenkins-AutoTesting
 
 on:
   push:
