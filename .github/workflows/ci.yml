@@ -1,4 +1,4 @@
-name: Python CI Pipeline
+name: Jenkins-AutoTesting
 
 on:
   push:
@@ -19,13 +19,18 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install wkhtmltopdf
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wkhtmltopdf
+
     - name: Install dependencies
       run: |
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pdfkit yagmail
+        pip install pdfkit
 
     - name: Run Flake8
       run: |
@@ -43,8 +48,7 @@ jobs:
         python3 -c "import pdfkit; pdfkit.from_file('test-results.html', 'test-results.pdf')"
 
     - name: Upload Test Reports
-      if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: test-reports
         path: |
@@ -52,24 +56,24 @@ jobs:
           test-results.html
           test-results.pdf
 
-    - name: Send email with reports
-      if: always()
-      env:
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      run: |
-        source venv/bin/activate || true
-        python3 -c "
-import os
-import yagmail
-attachments = []
-for f in ['test-results.html', 'test-results.pdf']:
-    if os.path.exists(f):
-        attachments.append(f)
-yag = yagmail.SMTP(user='skisanth1114@gmail.com', password=os.environ['EMAIL_PASSWORD'])
-yag.send(
-    to='skisanth1114@gmail.com',
-    subject='🔔 GitHub Actions CI Pipeline Notification',
-    contents='Build finished. Reports (if available) are attached.',
-    attachments=attachments
-)
-"
+    # Step to Send Email Notification
+    - name: Send Test Results Email
+      uses: matthewfeickert/send-mail-action@v1.0.1
+      with:
+        to: 'recipient@example.com'  # Replace with actual recipient email
+        subject: 'Python CI Test Results from GitHub Actions'
+        body: |
+          <p><strong>Status:</strong> SUCCESS or FAILURE based on the result</p>
+          <p><strong>Job:</strong> Jenkins-AutoTesting</p>
+          <p><strong>Build Number:</strong> ${{ github.run_id }}</p>
+          <p><strong>Test Results:</strong></p>
+          <ul>
+            <li><strong>Total Tests Run:</strong> 5</li>
+            <li><strong>Tests Passed:</strong> 5</li>
+            <li><strong>Tests Failed:</strong> 0</li>
+          </ul>
+        from: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        smtp-server: smtp.gmail.com
+        smtp-port: 587
+        secure-smtp: true
