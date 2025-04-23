@@ -43,7 +43,7 @@ jobs:
         python3 -c "import pdfkit; pdfkit.from_file('test-results.html', 'test-results.pdf')"
 
     - name: Upload Test Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: test-reports
         path: |
