@@ -1,4 +1,4 @@
-name: Jenkins-AutoTesting
+name: Jenkins-AutoTEsting
 
 on:
   push:
@@ -55,45 +55,3 @@ jobs:
           test-results.xml
           test-results.html
           test-results.pdf
-
-    # Step to Send Email Notification using Python's smtplib
-    - name: Send Test Results Email
-      run: |
-        python -m pip install secure-smtplib
-        python -c "
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-sender_email = 'skisanth1114@gmail.com'
-receiver_email = 'skisanth1114@gmail.com'  # Can be any email you'd like
-password = '${{ secrets.EMAIL_PASSWORD }}'
-
-msg = MIMEMultipart()
-msg['From'] = sender_email
-msg['To'] = receiver_email
-msg['Subject'] = 'Python CI Test Results from GitHub Actions'
-
-body = '''
-<p><strong>Status:</strong> SUCCESS or FAILURE based on the result</p>
-<p><strong>Job:</strong> Jenkins-AutoTesting</p>
-<p><strong>Build Number:</strong> ${{ github.run_id }}</p>
-<p><strong>Test Results:</strong></p>
-<ul>
-  <li><strong>Total Tests Run:</strong> 5</li>
-  <li><strong>Tests Passed:</strong> 5</li>
-  <li><strong>Tests Failed:</strong> 0</li>
-</ul>
-'''
-
-msg.attach(MIMEText(body, 'html'))
-
-try:
-    with smtplib.SMTP('smtp.gmail.com', 587) as server:
-        server.starttls()
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
-    print('Email sent successfully!')
-except Exception as e:
-    print(f'Failed to send email: {str(e)}')
-"
