@@ -1,5 +1,5 @@
 import streamlit as st
-from .calculator import Calculator
+from calculator import Calculator
 import subprocess
 
 # Create a Calculator instance
