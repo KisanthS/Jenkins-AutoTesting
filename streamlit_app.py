@@ -1,76 +1,85 @@
 import streamlit as st
+import requests
 import time
-from app.calculator import Calculator
 
-# Set page config
-st.set_page_config(page_title="Jenkins AutoTesting", page_icon="🔍", layout="centered")
+# ------------------------------
+# CONFIGURE YOUR GITHUB DETAILS
+# ------------------------------
+GITHUB_TOKEN = "your-github-personal-access-token"
+REPO_OWNER = "your-github-username"
+REPO_NAME = "your-repo-name"
 
-# Custom CSS for stylish touch
-st.markdown("""
-    <style>
-        .main {
-            background-color: #f5f7fa;
-            padding: 20px;
-            border-radius: 10px;
+# ------------------------------
+# Streamlit UI
+# ------------------------------
+st.set_page_config(page_title="GitHub Actions AutoTesting", page_icon="🛠️", layout="centered")
+
+st.title("🧮 Calculator (GitHub Actions AutoTesting)")
+st.write("Perform a calculation and trigger GitHub Action to run tests!")
+
+a = st.number_input("Enter first number (a):", value=0)
+b = st.number_input("Enter second number (b):", value=0)
+operation = st.selectbox("Choose operation:", ["Add", "Subtract", "Multiply", "Divide"])
+
+if st.button("Submit and Trigger Build"):
+    st.info("Triggering GitHub Action... Please wait...")
+
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    payload = {
+        "event_type": "trigger-tests",
+        "client_payload": {
+            "a": a,
+            "b": b,
+            "operation": operation.lower()
         }
-        .title {
-            text-align: center;
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        .stButton > button {
-            background-color: #2c3e50;
-            color: white;
-            padding: 0.75em 1.5em;
-            font-size: 1em;
-            border-radius: 8px;
-        }
-        footer {
-            visibility: hidden;
-        }
-    </style>
-""", unsafe_allow_html=True)
+    }
 
-# Title
-st.markdown('<div class="title">🔍 Jenkins AutoTesting Web App</div>', unsafe_allow_html=True)
+    # Trigger GitHub Action
+    response = requests.post(
+        f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/dispatches",
+        json=payload,
+        headers=headers
+    )
 
-# Input form
-with st.form("calculator_form"):
-    a = st.number_input("Enter first number (a)", step=1.0)
-    b = st.number_input("Enter second number (b)", step=1.0)
-    operation = st.selectbox("Select operation", ("Add", "Subtract", "Multiply", "Divide"))
-    submitted = st.form_submit_button("Trigger Build 🚀")  # updated button text
+    if response.status_code == 204:
+        st.success("✅ GitHub Action triggered successfully!")
+    else:
+        st.error(f"❌ Failed to trigger GitHub Action. Status Code: {response.status_code}")
+        st.stop()
 
-if submitted:
-    calc = Calculator()
+    # Wait before checking workflow status
+    time.sleep(5)
 
-    start_time = time.time()  # Start timer
+    # Poll GitHub Actions for workflow run status
+    build_result = None
+    for _ in range(10):  # Retry 10 times
+        runs_response = requests.get(
+            f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs",
+            headers=headers
+        )
 
-    try:
-        if operation == "Add":
-            result = calc.add(a, b)
-        elif operation == "Subtract":
-            result = calc.subtract(a, b)
-        elif operation == "Multiply":
-            result = calc.multiply(a, b)
-        elif operation == "Divide":
-            result = calc.divide(a, b)
+        if runs_response.status_code == 200:
+            runs_data = runs_response.json()
+            latest_run = runs_data["workflow_runs"][0]
 
-        elapsed_time = time.time() - start_time  # End timer
+            if latest_run["status"] == "completed":
+                build_result = latest_run["conclusion"]
+                break
+            else:
+                st.write("🔄 Build is still running...")
+                time.sleep(5)
+        else:
+            st.error(f"❌ Failed to fetch workflow runs. Status Code: {runs_response.status_code}")
+            st.stop()
 
-        # If calculation successful
-        st.success(f"✅ Build Success!")
-        st.write(f"Result of **{operation.lower()}**: **{result}**")
-        st.write(f"⏱️ Build completed in **{elapsed_time:.2f} seconds**.")
-
-        # Confetti animation
-        st.snow()  # ❄️ snow looks a bit like confetti on Streamlit!
-
-    except Exception as e:
-        elapsed_time = time.time() - start_time  # End timer if error
-        # If any error occurs (like divide by zero)
-        st.error(f"❌ Build Failed!")
-        st.write(f"Error: {str(e)}")
-        st.write(f"⏱️ Build failed in **{elapsed_time:.2f} seconds**.")
+    if build_result == "success":
+        st.balloons()
+        st.success("🟢 Build Success! All tests passed!")
+    elif build_result == "failure":
+        st.error("🔴 Build Failed! Check your test results.")
+    else:
+        st.warning("⚠️ Build status unknown. Please check GitHub manually.")
