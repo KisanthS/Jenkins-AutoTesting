@@ -19,6 +19,11 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install wkhtmltopdf
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wkhtmltopdf
+
     - name: Install dependencies
       run: |
         python -m venv venv
@@ -26,18 +31,19 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements.txt
         pip install pdfkit
+        pip install streamlit  # ✅ Added this so CI knows Streamlit app exists
 
-    - name: Run Flake8
+    - name: Check code style using Flake8
       run: |
         source venv/bin/activate
         flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Run Pytest and generate reports
+    - name: Run unit tests and generate reports
       run: |
         source venv/bin/activate
-        pytest --junitxml=test-results.xml --html=test-results.html --self-contained-html
+        pytest tests/ --junitxml=test-results.xml --html=test-results.html --self-contained-html
 
-    - name: Convert HTML to PDF
+    - name: Convert HTML report to PDF
       run: |
         source venv/bin/activate
         python3 -c "import pdfkit; pdfkit.from_file('test-results.html', 'test-results.pdf')"
