@@ -27,11 +27,11 @@ if st.button("Submit"):
 
         st.success(f"🎯 Result: {result}")
 
-        # --- GitHub Info (from Streamlit secrets) ---
-        GITHUB_TOKEN = st.secrets["github"]["token"]  # Securely fetch the token
-        REPO_OWNER = st.secrets["github"]["repo_owner"]
-        REPO_NAME = st.secrets["github"]["repo_name"]
-        WORKFLOW_FILE = st.secrets["github"]["workflow_file"]
+        # --- GitHub Info (HARDCODED) ---
+        GITHUB_TOKEN = st.secrets["github"]["token"]  # Use secret token from Streamlit secrets
+        REPO_OWNER = "KisanthS"
+        REPO_NAME = "Jenkins-AutoTesting"
+        WORKFLOW_FILE = "ci.yml"
 
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
