@@ -16,6 +16,7 @@ if st.button("Submit"):
     calc = Calculator()
 
     try:
+        # Perform the chosen calculation
         if operation == "Add":
             result = calc.add(num1, num2)
         elif operation == "Subtract":
@@ -27,11 +28,11 @@ if st.button("Submit"):
 
         st.success(f"🎯 Result: {result}")
 
-        # --- GitHub Info (HARDCODED) ---
+        # --- GitHub Info (retrieved from Streamlit secrets) ---
         GITHUB_TOKEN = st.secrets["github"]["token"]  # Use secret token from Streamlit secrets
-        REPO_OWNER = "KisanthS"
-        REPO_NAME = "Jenkins-AutoTesting"
-        WORKFLOW_FILE = "ci.yml"
+        REPO_OWNER = st.secrets["github"]["repo_owner"]
+        REPO_NAME = st.secrets["github"]["repo_name"]
+        WORKFLOW_FILE = st.secrets["github"]["workflow_file"]
 
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
