@@ -9,12 +9,15 @@ st.title("🛠️ Jenkins AutoTesting Calculator")
 
 st.markdown("""
 <style>
-    .main {
-        background-image: url('https://images.warnersallman.com/big/4795-dark-blue-pink-abstract-swirl-.jpg');
+    body {
+        background-image: url('https://cdn.wallpapersafari.com/97/31/nsDGar.jpg');
         background-size: cover;
+        background-position: center;
+    }
+    .main {
+        background-color: rgba(255, 255, 255, 0.8);
         padding: 2rem;
         border-radius: 10px;
-        color: white;
     }
     .stButton>button {
         background-color: #4CAF50;
