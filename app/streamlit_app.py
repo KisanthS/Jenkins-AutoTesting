@@ -44,6 +44,7 @@ if st.button("🚀 Submit and Run Tests"):
         elif operation == "Multiply":
             result = calc.multiply(num1, num2)
         elif operation == "Divide":
+            # Catch division by zero explicitly
             result = calc.divide(num1, num2)
 
         st.success(f"🎯 Result: **{result}**")
@@ -112,6 +113,18 @@ if st.button("🚀 Submit and Run Tests"):
                 build_status_placeholder.error("❌ Failed to fetch workflow runs.")
                 st.stop()
 
-    except Exception as e:
+    except ValueError as e:
         st.error(f"🚨 Error: {e}")
+        st.markdown("### 🔴 Build Failed! ❌", unsafe_allow_html=True)
+        
+        # After catching the error, trigger the test case for "divide by zero"
+        try:
+            # Perform division by zero test
+            calc.divide(1, 0)
+        except ValueError:
+            st.error("❌ Division by zero test passed. Build failed due to exception.")
+            st.stop()
+    
+    except Exception as e:
+        st.error(f"🚨 Unexpected Error: {e}")
         st.markdown("### 🔴 Build Failed! ❌", unsafe_allow_html=True)
