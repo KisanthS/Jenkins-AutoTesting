@@ -1,6 +1,6 @@
 import streamlit as st
 import subprocess
-from app.calculator import Calculator
+from calculator import Calculator
 
 # Streamlit UI settings
 st.set_page_config(page_title="AutoTesting Dashboard", page_icon="🛠️", layout="centered")
