@@ -7,6 +7,7 @@ from calculator import Calculator
 st.set_page_config(page_title="Jenkins AutoTesting 🚀", page_icon="⚙️", layout="centered")
 st.title("🛠️ Jenkins AutoTesting Calculator")
 
+# --- Custom Styling ---
 st.markdown("""
 <style>
     .main {
@@ -18,16 +19,39 @@ st.markdown("""
         background-color: #4CAF50;
         color: white;
         font-size: 18px;
-        padding: 10px 24px;
+        padding: 12px 24px;
         border: none;
         border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+    }
+    .stSelectbox>div, .stNumberInput>div {
+        font-size: 18px;
+        padding: 10px;
+        background-color: #f0f4f7;
+        border-radius: 6px;
+    }
+    .stAlert {
+        font-size: 18px;
+        padding: 10px;
+    }
+    .stProgress>div {
+        background-color: #4CAF50;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # --- Input fields ---
-num1 = st.number_input("🔢 Enter Number 1", value=0, step=1, format="%d")
-num2 = st.number_input("🔢 Enter Number 2", value=0, step=1, format="%d")
+col1, col2 = st.columns(2)
+
+with col1:
+    num1 = st.number_input("🔢 Enter Number 1", value=0, step=1, format="%d")
+
+with col2:
+    num2 = st.number_input("🔢 Enter Number 2", value=0, step=1, format="%d")
 
 operation = st.selectbox("🔧 Choose Operation", ["Add", "Subtract", "Multiply", "Divide"])
 
