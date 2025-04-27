@@ -1,44 +1,61 @@
 import streamlit as st
+from app.calculator import Calculator
 import subprocess
-import pytest
+import time
 import os
-from calculator import Calculator
 
-# Streamlit UI
-st.set_page_config(page_title="Jenkins AutoTesting UI", page_icon="🛠️", layout="centered")
+# Streamlit Page Config
+st.set_page_config(page_title="Jenkins-AutoTesting", page_icon="🛠️", layout="centered")
 
-st.title("🛠️ Jenkins AutoTesting Webpage")
-st.subheader("Enter your inputs and trigger the tests!")
+# UI Decorations
+st.title("🔧 Jenkins-AutoTesting Calculator")
+st.markdown("## Enter your numbers and select an operation:")
+st.divider()
 
-number1 = st.number_input("Enter Number 1", format="%.2f")
-number2 = st.number_input("Enter Number 2", format="%.2f")
-operation = st.selectbox("Select Operation", ["Add", "Subtract", "Multiply", "Divide"])
+# Input Fields
+number1 = st.number_input("Enter Number 1:", format="%.2f")
+number2 = st.number_input("Enter Number 2:", format="%.2f")
 
-if st.button("Submit"):
-    calc = Calculator()
+operation = st.selectbox("Select Operation:", ["Add", "Subtract", "Multiply", "Divide"])
 
-    try:
-        if operation == "Add":
-            result = calc.add(number1, number2)
-        elif operation == "Subtract":
-            result = calc.subtract(number1, number2)
-        elif operation == "Multiply":
-            result = calc.multiply(number1, number2)
-        elif operation == "Divide":
-            result = calc.divide(number1, number2)
+if st.button("🚀 Submit and Run Tests"):
+    with st.spinner('Calculating... and Running Tests 🔄'):
+        calc = Calculator()
         
-        st.success(f"✅ Result of {operation}: {result}")
+        # Perform the selected operation
+        try:
+            if operation == "Add":
+                result = calc.add(number1, number2)
+            elif operation == "Subtract":
+                result = calc.subtract(number1, number2)
+            elif operation == "Multiply":
+                result = calc.multiply(number1, number2)
+            elif operation == "Divide":
+                result = calc.divide(number1, number2)
+            
+            st.success(f"✅ Result: **{result}**")
         
-        # Run tests after calculation
-        with st.spinner("Running automated tests..."):
-            test_result = subprocess.run(["pytest", "--maxfail=1", "--disable-warnings"], capture_output=True, text=True)
+        except Exception as e:
+            st.error(f"❌ Error: {str(e)}")
+            result = None
+
+        # --- Run Pytest locally ---
+        time.sleep(1)
+        with open('pytest_output.txt', 'w') as f:
+            subprocess.run(['pytest', '--tb=short', '--maxfail=1'], stdout=f, stderr=subprocess.STDOUT)
         
-        if test_result.returncode == 0:
-            st.success("🟢 All tests passed! Build Success!")
+        with open('pytest_output.txt', 'r') as f:
+            pytest_result = f.read()
+
+        # --- Show Build Status based on tests ---
+        if "failed" in pytest_result.lower():
+            st.error("🔴 **Tests Failed. Build Failed!**")
             st.balloons()
         else:
-            st.error("🔴 Some tests failed! Build Failed!")
-            st.code(test_result.stdout + test_result.stderr)
-    
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
+            st.success("🟢 **Tests Passed. Build Successful!**")
+            st.balloons()
+
+        st.divider()
+
+        with st.expander("🔎 See Detailed Test Logs"):
+            st.code(pytest_result)
