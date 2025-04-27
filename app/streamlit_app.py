@@ -1,89 +1,82 @@
 import streamlit as st
 import subprocess
-import pytest
-import os
-from calculator import Calculator
+from app.calculator import Calculator
 
 # Streamlit UI settings
-st.set_page_config(page_title="Jenkins AutoTesting UI 🚀", page_icon="🛠️", layout="centered")
+st.set_page_config(page_title="AutoTesting Dashboard", page_icon="🛠️", layout="centered")
 
-# Custom CSS to make UI beautiful
+# Custom CSS for better look
 st.markdown("""
     <style>
-    .main {
-        background-color: #f0f2f6;
-        padding: 20px;
-        border-radius: 15px;
-    }
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-size: 18px;
-        padding: 10px 24px;
-        border: none;
-        border-radius: 12px;
-        transition-duration: 0.4s;
-    }
-    .stButton>button:hover {
-        background-color: #45a049;
-    }
-    .success-box {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
-        font-size: 18px;
-    }
-    .error-box {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
-        font-size: 18px;
-    }
+        .main {
+            background-color: #f5f7fa;
+        }
+        .stButton>button {
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 8px;
+            height: 3em;
+            width: 100%;
+            font-size: 1.2em;
+        }
+        .stSelectbox>div>div {
+            font-size: 1.1em;
+        }
+        .stNumberInput>div>div>input {
+            font-size: 1.1em;
+        }
+        .stTextInput>div>div>input {
+            font-size: 1.1em;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# App Title
-st.title("🛠️ Jenkins AutoTesting Webpage")
-st.caption("✨ Trigger your builds and view results live!")
+# Title and Description
+st.title("🛠️ Jenkins AutoTesting Dashboard")
+st.markdown("<h4 style='color: #6c757d;'>Give input ➔ Get result ➔ Auto-run tests ➔ See Build Status!</h4>", unsafe_allow_html=True)
+st.write("---")
 
 # Input Section
-with st.container():
-    st.subheader("🔢 Enter Inputs")
-    number1 = st.number_input("Enter Number 1", format="%.2f")
-    number2 = st.number_input("Enter Number 2", format="%.2f")
-    operation = st.selectbox("Select Operation", ["Add ➕", "Subtract ➖", "Multiply ✖️", "Divide ➗"])
+st.header("🔢 Provide Inputs")
+col1, col2 = st.columns(2)
+
+with col1:
+    number1 = st.number_input("Enter Number 1", format="%.2f", key="num1")
+with col2:
+    number2 = st.number_input("Enter Number 2", format="%.2f", key="num2")
+
+operation = st.selectbox("➕ Choose an Operation", ["Add", "Subtract", "Multiply", "Divide"])
 
 # Submit Button
-if st.button("🚀 Submit"):
+submit_button = st.button("🚀 Submit and Run Tests")
+
+if submit_button:
     calc = Calculator()
 
     try:
-        # Perform Calculation
-        if operation.startswith("Add"):
+        if operation == "Add":
             result = calc.add(number1, number2)
-        elif operation.startswith("Subtract"):
+        elif operation == "Subtract":
             result = calc.subtract(number1, number2)
-        elif operation.startswith("Multiply"):
+        elif operation == "Multiply":
             result = calc.multiply(number1, number2)
-        elif operation.startswith("Divide"):
+        elif operation == "Divide":
             result = calc.divide(number1, number2)
 
-        st.success(f"✅ Result of {operation}: {result}")
-
-        # Run Tests
-        with st.spinner("🔍 Running automated tests... Please wait!"):
+        st.success(f"✅ **Result of {operation}: {result}**")
+        st.write("---")
+        
+        # Running Tests
+        with st.spinner("🧪 Running automated tests... Please wait..."):
             test_result = subprocess.run(["pytest", "--maxfail=1", "--disable-warnings"], capture_output=True, text=True)
-
+        
         if test_result.returncode == 0:
-            st.markdown('<div class="success-box">🎉 All Tests Passed! Build Success! 🎯</div>', unsafe_allow_html=True)
+            st.success("🟢 **All tests passed! Build Success!** 🎉")
             st.balloons()
         else:
-            st.markdown('<div class="error-box">❌ Some Tests Failed! Build Failed! 🔥</div>', unsafe_allow_html=True)
-            st.code(test_result.stdout + test_result.stderr, language='bash')
-
+            st.error("🔴 **Some tests failed! Build Failed!** ❌")
+            with st.expander("🔍 See Test Details"):
+                st.code(test_result.stdout + test_result.stderr)
+    
     except Exception as e:
-        st.markdown(f'<div class="error-box">🚨 Error occurred: {e}</div>', unsafe_allow_html=True)
+        st.error(f"❌ **Error Occurred:** {e}")
