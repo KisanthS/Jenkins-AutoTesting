@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 import pytest
 import os
-from app.calculator import Calculator
+from calculator import Calculator
 
 # Streamlit UI settings
 st.set_page_config(page_title="Jenkins AutoTesting UI 🚀", page_icon="🛠️", layout="centered")
