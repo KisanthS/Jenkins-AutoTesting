@@ -7,11 +7,11 @@ from calculator import Calculator
 st.set_page_config(page_title="Jenkins AutoTesting 🚀", page_icon="⚙️", layout="centered")
 st.title("🛠️ Jenkins AutoTesting Calculator")
 
-# Custom CSS with background image
+# Custom CSS with new background image
 st.markdown("""
 <style>
     .main {
-        background-image: url('https://img.freepik.com/free-vector/4k-wallpaper-dark_53876-29256.jpg');
+        background-image: url('https://img.freepik.com/free-vector/abstract-blue-circle-black-background-technology_1142-10526.jpg?semt=ais_hybrid&w=740');
         background-size: cover;
         padding: 2rem;
         border-radius: 10px;
