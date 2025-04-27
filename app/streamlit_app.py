@@ -11,7 +11,7 @@ st.title("🛠️ Jenkins AutoTesting Calculator")
 st.markdown("""
 <style>
     .main {
-        background-image: url('https://img.freepik.com/free-vector/abstract-blue-circle-black-background-technology_1142-10526.jpg?semt=ais_hybrid&w=740.jpg');
+        background-image: url('https://images.pexels.com/photos/32997/pexels-photo.jpg?cs=srgb&dl=pexels-asim-razan-32997.jpg&fm=jpg');
         background-size: cover;
         padding: 2rem;
         border-radius: 10px;
