@@ -44,7 +44,9 @@ if st.button("🚀 Submit and Run Tests"):
         elif operation == "Multiply":
             result = calc.multiply(num1, num2)
         elif operation == "Divide":
-            # Catch division by zero explicitly
+            # Explicitly check for division by zero
+            if num2 == 0:
+                raise ValueError("🚨 Division by Zero Error!")
             result = calc.divide(num1, num2)
 
         st.success(f"🎯 Result: **{result}**")
@@ -117,14 +119,14 @@ if st.button("🚀 Submit and Run Tests"):
         st.error(f"🚨 Error: {e}")
         st.markdown("### 🔴 Build Failed! ❌", unsafe_allow_html=True)
         
-        # After catching the error, trigger the test case for "divide by zero"
+        # Triggering a test for the failed operation
         try:
-            # Perform division by zero test
+            # Triggering division by zero test
             calc.divide(1, 0)
-        except ValueError:
-            st.error("❌ Division by zero test passed. Build failed due to exception.")
+        except Exception as e:
+            st.error(f"❌ Error occurred while performing the test: {e}")
             st.stop()
-    
+
     except Exception as e:
         st.error(f"🚨 Unexpected Error: {e}")
         st.markdown("### 🔴 Build Failed! ❌", unsafe_allow_html=True)
