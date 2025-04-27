@@ -6,45 +6,26 @@ from calculator import Calculator
 # --- Streamlit UI Settings ---
 st.set_page_config(page_title="Jenkins AutoTesting", page_icon="⚙️", layout="centered")
 
-# --- Custom CSS for Glassmorphism Effect ---
-st.markdown("""
-    <style>
-    .glass {
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        margin-bottom: 20px;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- Title and Description ---
-st.markdown("<h1 style='text-align: center; color: #00C9A7;'>🛠️ Calculator & AutoTest Runner 🚀</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🛠️ Calculator & AutoTest Runner 🚀</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Trigger GitHub Actions and see real-time build status!</p>", unsafe_allow_html=True)
 st.markdown("---")
 
-# --- Input Section in Glass Box ---
-st.markdown('<div class="glass">', unsafe_allow_html=True)
-
+# --- Input Section ---
 st.subheader("🔢 Input Your Values")
-col1, col2 = st.columns(2)
-with col1:
-    num1 = st.number_input("Enter Number 1", value=0, step=1, format="%d")
-with col2:
-    num2 = st.number_input("Enter Number 2", value=0, step=1, format="%d")
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        num1 = st.number_input("Enter Number 1", value=0, step=1, format="%d")
+    with col2:
+        num2 = st.number_input("Enter Number 2", value=0, step=1, format="%d")
 
 operation = st.selectbox("🔧 Choose Operation", ["Add", "Subtract", "Multiply", "Divide"])
 
-st.markdown('</div>', unsafe_allow_html=True)  # Close Glass Div
+st.markdown("---")
 
 # --- Submit Button ---
-st.markdown('<div class="glass">', unsafe_allow_html=True)
 submit_button = st.button("🚀 Run Calculation & Tests", use_container_width=True)
-st.markdown('</div>', unsafe_allow_html=True)
 
 if submit_button:
     start_time = time.time()
@@ -89,7 +70,7 @@ if submit_button:
         # --- Poll GitHub for Workflow Run Status ---
         st.info("⏳ Waiting for build to start...")
 
-        time.sleep(5)  # Give GitHub time
+        time.sleep(5)  # Give GitHub a few seconds to start
 
         runs_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs"
         build_status_placeholder = st.empty()
@@ -104,12 +85,12 @@ if submit_button:
                 runs_data = runs_response.json()
                 latest_run = runs_data["workflow_runs"][0]
 
-                status = latest_run["status"]
-                conclusion = latest_run["conclusion"]
+                status = latest_run["status"]  # queued, in_progress, completed
+                conclusion = latest_run["conclusion"]  # success, failure, cancelled
 
                 if status == "completed":
                     build_completed = True
-                    total_time = time.time() - start_time
+                    total_time = time.time() - start_time  # ⏱️
                     minutes, seconds = divmod(int(total_time), 60)
 
                     if conclusion == "success":
