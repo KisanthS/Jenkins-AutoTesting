@@ -7,28 +7,32 @@ from calculator import Calculator
 st.set_page_config(page_title="Jenkins AutoTesting 🚀", page_icon="⚙️", layout="centered")
 st.title("🛠️ Jenkins AutoTesting Calculator")
 
+# --- Background image via HTML ---
 st.markdown("""
-<style>
-    body {
-        background-image: url('https://cdn.wallpapersafari.com/97/31/nsDGar.jpg') !important;
-        background-size: cover !important;
-        background-position: center !important;
-        background-attachment: fixed !important;
-    }
-    .main {
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 2rem;
-        border-radius: 10px;
-    }
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-size: 18px;
-        padding: 10px 24px;
-        border: none;
-        border-radius: 8px;
-    }
-</style>
+    <style>
+        body {
+            background-image: url("https://cdn.wallpapersafari.com/97/31/nsDGar.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+        }
+        .main {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .stButton>button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
 """, unsafe_allow_html=True)
 
 # --- Input fields ---
