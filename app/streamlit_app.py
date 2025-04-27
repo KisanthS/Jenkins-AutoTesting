@@ -10,9 +10,10 @@ st.title("🛠️ Jenkins AutoTesting Calculator")
 st.markdown("""
 <style>
     body {
-        background-image: url('https://cdn.wallpapersafari.com/97/31/nsDGar.jpg');
-        background-size: cover;
-        background-position: center;
+        background-image: url('https://cdn.wallpapersafari.com/97/31/nsDGar.jpg') !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: fixed !important;
     }
     .main {
         background-color: rgba(255, 255, 255, 0.8);
