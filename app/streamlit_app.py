@@ -3,23 +3,39 @@ import requests
 import time
 from calculator import Calculator
 
+# --- Streamlit UI Setup ---
+st.set_page_config(page_title="Jenkins AutoTesting 🚀", page_icon="⚙️", layout="centered")
+st.title("🛠️ Jenkins AutoTesting Calculator")
 
-# --- Streamlit UI ---
-st.set_page_config(page_title="Jenkins AutoTesting", page_icon="⚙️", layout="centered")
-st.title("🛠️ Calculator and Test Runner 🚀")
+st.markdown("""
+<style>
+    .main {
+        background-color: #f5f7fa;
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 18px;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# Input fields
-num1 = st.number_input("Enter Number 1", value=0)
-num2 = st.number_input("Enter Number 2", value=0)
-operation = st.selectbox("Choose operation", ["Add", "Subtract", "Multiply", "Divide"])
+# --- Input fields ---
+num1 = st.number_input("🔢 Enter Number 1", value=0.0)
+num2 = st.number_input("🔢 Enter Number 2", value=0.0)
+operation = st.selectbox("🔧 Choose Operation", ["Add", "Subtract", "Multiply", "Divide"])
 
-
-
-if st.button("Submit"):
+# --- Submit Button ---
+if st.button("🚀 Submit and Run Tests"):
     calc = Calculator()
 
     try:
-        # Perform the chosen calculation
+        # Perform calculation
         if operation == "Add":
             result = calc.add(num1, num2)
         elif operation == "Subtract":
@@ -29,10 +45,10 @@ if st.button("Submit"):
         elif operation == "Divide":
             result = calc.divide(num1, num2)
 
-        st.success(f"🎯 Result: {result}")
-
-        # --- GitHub Info (retrieved from Streamlit secrets) ---
-        GITHUB_TOKEN = st.secrets["github"]["token"]  # Use secret token from Streamlit secrets
+        st.success(f"🎯 Result: **{result}**")
+        
+        # --- GitHub Info from Streamlit Secrets ---
+        GITHUB_TOKEN = st.secrets["github"]["token"]
         REPO_OWNER = st.secrets["github"]["repo_owner"]
         REPO_NAME = st.secrets["github"]["repo_name"]
         WORKFLOW_FILE = st.secrets["github"]["workflow_file"]
@@ -53,18 +69,18 @@ if st.button("Submit"):
             st.error(f"❌ Failed to trigger GitHub Action. Status: {dispatch_response.status_code}")
             st.stop()
 
-        # --- Poll GitHub for Workflow Run Status ---
-        st.info("⏳ Waiting for workflow to start...")
-
-        time.sleep(5)  # Give GitHub a few seconds to start the workflow
+        # --- Poll for Workflow Status ---
+        st.info("⏳ Waiting for GitHub Action to complete...")
+        time.sleep(5)  # Small delay to let the workflow start
 
         runs_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/runs"
-
         build_status_placeholder = st.empty()
+        build_time_placeholder = st.empty()
         progress_bar = st.progress(0)
 
         build_completed = False
         progress = 0
+        start_time = time.time()
 
         while not build_completed:
             runs_response = requests.get(runs_url, headers=headers)
@@ -75,6 +91,9 @@ if st.button("Submit"):
                 status = latest_run["status"]  # queued, in_progress, completed
                 conclusion = latest_run["conclusion"]  # success, failure, cancelled
 
+                elapsed_time = int(time.time() - start_time)
+                build_time_placeholder.info(f"⏱️ Build Time: {elapsed_time} seconds")
+
                 if status == "completed":
                     build_completed = True
                     if conclusion == "success":
@@ -84,14 +103,14 @@ if st.button("Submit"):
                     progress_bar.empty()
                 else:
                     build_status_placeholder.info(f"🔄 Build {status.capitalize()}... Please wait")
-                    progress = (progress + 10) % 100
+                    progress = (progress + 8) % 100
                     progress_bar.progress(progress)
-                    
-                time.sleep(5)  # Check every 5 seconds
+
+                time.sleep(5)
             else:
                 build_status_placeholder.error("❌ Failed to fetch workflow runs.")
                 st.stop()
 
     except Exception as e:
-        st.error(f"Error: {e}")
-        st.markdown("### 🔴 Tests Failed. Build Failed! ❌", unsafe_allow_html=True)
+        st.error(f"🚨 Error: {e}")
+        st.markdown("### 🔴 Build Failed! ❌", unsafe_allow_html=True)
