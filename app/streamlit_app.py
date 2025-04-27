@@ -1,5 +1,5 @@
 import streamlit as st
-from app.calculator import Calculator
+from calculator import Calculator
 import subprocess
 import time
 import os
