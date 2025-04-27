@@ -26,8 +26,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Input fields ---
-num1 = st.number_input("🔢 Enter Number 1", value=0.0)
-num2 = st.number_input("🔢 Enter Number 2", value=0.0)
+num1 = st.number_input("🔢 Enter Number 1", value=0, step=1, format="%d")
+num2 = st.number_input("🔢 Enter Number 2", value=0, step=1, format="%d")
 operation = st.selectbox("🔧 Choose Operation", ["Add", "Subtract", "Multiply", "Divide"])
 
 # --- Submit Button ---
